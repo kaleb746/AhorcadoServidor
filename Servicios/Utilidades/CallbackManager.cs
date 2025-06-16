@@ -56,24 +56,22 @@ namespace Servicios.Utilidades
             }
             return false;
         }
-        public static void IntentarNotificarFinDePartida(int idJugador, string mensaje, bool ganaste)
+        public static bool IntentarNotificarFinPartida(int idJugador, bool gano, string mensaje)
         {
-            if (CallbacksPorJugador.TryGetValue(idJugador, out var callback))
+            if (TryObtenerCallback(idJugador, out var callback))
             {
                 try
                 {
-                    callback.NotificarFinDePartida(mensaje, ganaste);
+                    callback.NotificarFinPartida(gano, mensaje);
+                    return true;
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"[Callback] Error al notificar fin de partida a jugador {idJugador}: {ex.Message}");
+                    Console.WriteLine($"[Callback Error - FinPartida] {ex.Message}");
+                    EliminarCallback(idJugador);
                 }
             }
-        }
-        public static void NotificarFinDePartida(int idGanador, int idPerdedor)
-        {
-            IntentarNotificarFinDePartida(idGanador, "¡Has ganado la partida!", true);
-            IntentarNotificarFinDePartida(idPerdedor, "Has perdido la partida. ¡Sigue intentando!", false);
+            return false;
         }
 
     }

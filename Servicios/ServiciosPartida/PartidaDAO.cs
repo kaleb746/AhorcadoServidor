@@ -8,6 +8,8 @@ namespace Servicios.ServiciosPartida
 {
     public class PartidaDAO
     {
+        private static readonly Dictionary<int, HashSet<char>> LetrasAdivinadasPorPartida = new Dictionary<int, HashSet<char>>();
+        private static readonly Dictionary<int, Dictionary<int, int>> ErroresPorJugadorPartida = new Dictionary<int, Dictionary<int, int>>();
         public int CrearPartida(int idJugador, int idPalabra)
         {
             try
@@ -124,9 +126,8 @@ namespace Servicios.ServiciosPartida
                 return false;
             }
         }
-        private static readonly Dictionary<int, HashSet<char>> LetrasAdivinadasPorPartida = new Dictionary<int, HashSet<char>>();
 
-        public (bool acierto, string estadoActualPalabra) IntentarLetra(int idPartida, char letra)
+        public (bool acierto, string estadoActualPalabra, int erroresActuales) IntentarLetra(int idPartida, int idJugador, char letra)
         {
             using (var context = new JuegoAhorcadoEntities())
             {
@@ -137,7 +138,7 @@ namespace Servicios.ServiciosPartida
                 if (partida == null)
                 {
                     Console.WriteLine($"[DAO - IntentarLetra] No se encontró la partida con ID {idPartida}");
-                    return (false, "");
+                    return (false, "", 0);
                 }
 
                 string palabra = partida.Palabras.Nombre.ToUpperInvariant();
@@ -150,9 +151,24 @@ namespace Servicios.ServiciosPartida
 
                 bool acierto = palabra.Contains(letra);
 
+                if (!ErroresPorJugadorPartida.ContainsKey(idPartida))
+                    ErroresPorJugadorPartida[idPartida] = new Dictionary<int, int>();
+
+                if (!acierto)
+                {
+                    if (!ErroresPorJugadorPartida[idPartida].ContainsKey(idJugador))
+                        ErroresPorJugadorPartida[idPartida][idJugador] = 0;
+
+                    ErroresPorJugadorPartida[idPartida][idJugador]++;
+                }
+
+                int errores = ErroresPorJugadorPartida[idPartida].ContainsKey(idJugador)
+                    ? ErroresPorJugadorPartida[idPartida][idJugador]
+                    : 0;
+
                 string estadoActual = new string(palabra.Select(c => LetrasAdivinadasPorPartida[idPartida].Contains(c) ? c : '_').ToArray());
 
-                return (acierto, estadoActual);
+                return (acierto, estadoActual, errores);
             }
         }
         public string ObtenerEstadoActualPalabra(int idPartida)
@@ -170,36 +186,6 @@ namespace Servicios.ServiciosPartida
                 return new string(palabra.Nombre
                     .Select(c => letrasAdivinadas.Contains(char.ToUpper(c)) ? c : '_')
                     .ToArray());
-            }
-        }
-        public bool FinalizarPartida(int idPartida, int idJugadorGanador)
-        {
-            try
-            {
-                using (var context = new JuegoAhorcadoEntities())
-                {
-                    var partida = context.Partidas.FirstOrDefault(p => p.Id == idPartida);
-                    if (partida == null) return false;
-
-                    const int ID_ESTADO_FINALIZADA = 3;
-                    partida.IdEstadoPartida = ID_ESTADO_FINALIZADA;
-
-                    var jugadorPartida = context.JugadoresPartidas
-                        .FirstOrDefault(jp => jp.IdPartida == idPartida && jp.IdJugador == idJugadorGanador);
-
-                    if (jugadorPartida != null)
-                    {
-                        jugadorPartida.Ganador = true;
-                    }
-
-                    context.SaveChanges();
-                    return true;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[DAO - FinalizarPartida] Error: {ex.Message}");
-                return false;
             }
         }
         private HashSet<char> ObtenerLetrasAdivinadas(int idPartida)

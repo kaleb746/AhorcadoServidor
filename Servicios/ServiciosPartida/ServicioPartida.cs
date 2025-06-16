@@ -67,7 +67,10 @@ namespace Servicios.ServiciosPartida
         public bool IntentarLetra(int idPartida, int idJugador, char letra)
         {
             var dao = new PartidaDAO();
-            var (acierto, estadoActualPalabra) = dao.IntentarLetra(idPartida, letra);
+            var (acierto, estadoActualPalabra, erroresActuales) = dao.IntentarLetra(idPartida, idJugador, letra);
+
+            bool palabraCompletada = !estadoActualPalabra.Contains('_');
+            const int MAX_ERRORES = 5;
 
             Task.Run(() =>
             {
@@ -75,12 +78,49 @@ namespace Servicios.ServiciosPartida
                 {
                     var jugadores = context.JugadoresPartidas
                         .Where(jp => jp.IdPartida == idPartida)
-                        .Select(jp => jp.IdJugador)
                         .ToList();
 
-                    foreach (int jugador in jugadores)
+                    foreach (var jugador in jugadores)
                     {
-                        CallbackManager.IntentarNotificarIntentoLetra(jugador, letra, acierto, estadoActualPalabra);
+                        CallbackManager.IntentarNotificarIntentoLetra(jugador.IdJugador, letra, acierto, estadoActualPalabra);
+                    }
+
+                    if (palabraCompletada || erroresActuales >= MAX_ERRORES)
+                    {
+                        var partida = context.Partidas.FirstOrDefault(p => p.Id == idPartida);
+                        if (partida != null)
+                            partida.IdEstadoPartida = 3;
+
+                        foreach (var jugador in jugadores)
+                        {
+                            jugador.Ganador = false;
+                        }
+
+                        int idGanador = palabraCompletada
+                            ? idJugador
+                            : jugadores.FirstOrDefault(j => j.IdJugador != idJugador)?.IdJugador ?? 0;
+
+                        var jugadorGanador = jugadores.FirstOrDefault(j => j.IdJugador == idGanador);
+                        if (jugadorGanador != null)
+                            jugadorGanador.Ganador = true;
+
+                        var jugadorBD = context.Jugadores.FirstOrDefault(j => j.Id == idGanador);
+                        if (jugadorBD != null)
+                            jugadorBD.Puntaje += 10;
+
+                        context.SaveChanges();
+
+                        foreach (var jugador in jugadores)
+                        {
+                            bool esGanador = jugador.IdJugador == idGanador;
+                            string mensaje = esGanador
+                                ? "¡Felicidades! Has ganado la partida."
+                                : erroresActuales >= MAX_ERRORES
+                                    ? "Te quedaste sin intentos. Has perdido."
+                                    : "Has perdido. El otro jugador adivinó la palabra.";
+
+                            CallbackManager.IntentarNotificarFinPartida(jugador.IdJugador, esGanador, mensaje);
+                        }
                     }
                 }
             });
@@ -91,43 +131,5 @@ namespace Servicios.ServiciosPartida
             var dao = new PartidaDAO();
             return dao.ObtenerEstadoActualPalabra(idPartida);
         }
-        public bool FinalizarPartida(int idPartida, int idJugadorGanador)
-        {
-            try
-            {
-                using (var context = new JuegoAhorcadoEntities())
-                {
-                    // Cambiar estado a finalizado
-                    var partida = context.Partidas.FirstOrDefault(p => p.Id == idPartida);
-                    if (partida != null)
-                        partida.IdEstadoPartida = 3;
-
-                    // Marcar como ganador
-                    var ganador = context.JugadoresPartidas
-                        .FirstOrDefault(jp => jp.IdPartida == idPartida && jp.IdJugador == idJugadorGanador);
-                    if (ganador != null)
-                        ganador.Ganador = true;
-
-                    // Buscar al perdedor
-                    var perdedor = context.JugadoresPartidas
-                        .FirstOrDefault(jp => jp.IdPartida == idPartida && jp.IdJugador != idJugadorGanador);
-
-                    context.SaveChanges();
-
-                    if (perdedor != null)
-                    {
-                        CallbackManager.NotificarFinDePartida(idJugadorGanador, perdedor.IdJugador);
-                    }
-
-                    return true;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[FinalizarPartida] Error: {ex.Message}");
-                return false;
-            }
-        }
-
     }
 }
