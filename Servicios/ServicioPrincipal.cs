@@ -51,7 +51,5 @@ namespace Servicios
         public bool IntentarLetra(int idPartida, int idJugador, char letra) => _partidaManager.IntentarLetra(idPartida, idJugador, letra);
 
         public string ObtenerEstadoPalabra(int idPartida) => _partidaManager.ObtenerEstadoPalabra(idPartida);
-
-        public bool FinalizarPartida(int idPartida, int idJugadorGanador) => _partidaManager.FinalizarPartida(idPartida, idJugadorGanador);
     }
 }

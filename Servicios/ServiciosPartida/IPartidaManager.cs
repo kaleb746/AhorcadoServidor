@@ -17,8 +17,6 @@ namespace Servicios.ServiciosPartida
         bool IntentarLetra(int idPartida, int idJugador, char letra);
         [OperationContract]
         string ObtenerEstadoPalabra(int idPartida);
-        [OperationContract]
-        bool FinalizarPartida(int idPartida, int idJugadorGanador);
     }
     public interface IPartidaCallback
     {
@@ -27,7 +25,6 @@ namespace Servicios.ServiciosPartida
         [OperationContract(IsOneWay = true)]
         void NotificarIntentoLetra(char letra, bool acierto, string estadoActualPalabra);
         [OperationContract(IsOneWay = true)]
-        void NotificarFinDePartida(string mensajeResultado, bool ganaste);
-
+        void NotificarFinPartida(bool gano, string mensaje);
     }
 }
