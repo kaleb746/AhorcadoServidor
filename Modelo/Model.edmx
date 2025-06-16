@@ -1,0 +1,482 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="JuegoAhorcadoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Categorias">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="NombreIngles" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Dificultades">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="NombreIngles" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EstadosPartida">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="NombreIngles" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Jugadores">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Correo" Type="nvarchar" MaxLength="450" Nullable="false" />
+          <Property Name="Contrasena" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Telefono" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Puntaje" Type="int" Nullable="false" />
+          <Property Name="Username" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="FechaDeNacimiento" Type="date" Nullable="false" />
+          <Property Name="ApellidoMaterno" Type="nvarchar(max)" />
+          <Property Name="ApellidoPaterno" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="JugadoresPartidas">
+          <Key>
+            <PropertyRef Name="IdJugador" />
+            <PropertyRef Name="IdPartida" />
+          </Key>
+          <Property Name="IdJugador" Type="int" Nullable="false" />
+          <Property Name="IdPartida" Type="int" Nullable="false" />
+          <Property Name="Rol" Type="nvarchar" MaxLength="50" />
+          <Property Name="Ganador" Type="bit" />
+        </EntityType>
+        <EntityType Name="Palabras">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IdDificultad" Type="int" Nullable="false" />
+          <Property Name="Descripcion" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="DescripcionIngles" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IdCategoria" Type="int" Nullable="false" />
+          <Property Name="NombreIngles" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Partidas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdPalabraSelecionada" Type="int" Nullable="false" />
+          <Property Name="IdEstadoPartida" Type="int" Nullable="false" />
+          <Property Name="FechaCreacionPartida" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="IdiomaPartida" Type="nvarchar(max)" />
+        </EntityType>
+        <Association Name="FK__Jugadores__IdJug__6FE99F9F">
+          <End Role="Jugadores" Type="Self.Jugadores" Multiplicity="1" />
+          <End Role="JugadoresPartidas" Type="Self.JugadoresPartidas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jugadores">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JugadoresPartidas">
+              <PropertyRef Name="IdJugador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Jugadores__IdPar__70DDC3D8">
+          <End Role="Partidas" Type="Self.Partidas" Multiplicity="1" />
+          <End Role="JugadoresPartidas" Type="Self.JugadoresPartidas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Partidas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JugadoresPartidas">
+              <PropertyRef Name="IdPartida" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Palabras_Categorias">
+          <End Role="Categorias" Type="Self.Categorias" Multiplicity="1" />
+          <End Role="Palabras" Type="Self.Palabras" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categorias">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Palabras">
+              <PropertyRef Name="IdCategoria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Palabras_Dificultades">
+          <End Role="Dificultades" Type="Self.Dificultades" Multiplicity="1" />
+          <End Role="Palabras" Type="Self.Palabras" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dificultades">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Palabras">
+              <PropertyRef Name="IdDificultad" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Partidas_EstadosPartida">
+          <End Role="EstadosPartida" Type="Self.EstadosPartida" Multiplicity="1" />
+          <End Role="Partidas" Type="Self.Partidas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EstadosPartida">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Partidas">
+              <PropertyRef Name="IdEstadoPartida" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Partidas_Palabras">
+          <End Role="Palabras" Type="Self.Palabras" Multiplicity="1" />
+          <End Role="Partidas" Type="Self.Partidas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Palabras">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Partidas">
+              <PropertyRef Name="IdPalabraSelecionada" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="JuegoAhorcadoModelStoreContainer">
+          <EntitySet Name="Categorias" EntityType="Self.Categorias" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Dificultades" EntityType="Self.Dificultades" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EstadosPartida" EntityType="Self.EstadosPartida" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Jugadores" EntityType="Self.Jugadores" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="JugadoresPartidas" EntityType="Self.JugadoresPartidas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Palabras" EntityType="Self.Palabras" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Partidas" EntityType="Self.Partidas" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Jugadores__IdJug__6FE99F9F" Association="Self.FK__Jugadores__IdJug__6FE99F9F">
+            <End Role="Jugadores" EntitySet="Jugadores" />
+            <End Role="JugadoresPartidas" EntitySet="JugadoresPartidas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Jugadores__IdPar__70DDC3D8" Association="Self.FK__Jugadores__IdPar__70DDC3D8">
+            <End Role="Partidas" EntitySet="Partidas" />
+            <End Role="JugadoresPartidas" EntitySet="JugadoresPartidas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Palabras_Categorias" Association="Self.FK_Palabras_Categorias">
+            <End Role="Categorias" EntitySet="Categorias" />
+            <End Role="Palabras" EntitySet="Palabras" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Palabras_Dificultades" Association="Self.FK_Palabras_Dificultades">
+            <End Role="Dificultades" EntitySet="Dificultades" />
+            <End Role="Palabras" EntitySet="Palabras" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Partidas_EstadosPartida" Association="Self.FK_Partidas_EstadosPartida">
+            <End Role="EstadosPartida" EntitySet="EstadosPartida" />
+            <End Role="Partidas" EntitySet="Partidas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Partidas_Palabras" Association="Self.FK_Partidas_Palabras">
+            <End Role="Palabras" EntitySet="Palabras" />
+            <End Role="Partidas" EntitySet="Partidas" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="JuegoAhorcadoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Categorias">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="NombreIngles" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Palabras" Relationship="JuegoAhorcadoModel.FK_Palabras_Categorias" FromRole="Categorias" ToRole="Palabras" />
+        </EntityType>
+        <EntityType Name="Dificultades">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="NombreIngles" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Palabras" Relationship="JuegoAhorcadoModel.FK_Palabras_Dificultades" FromRole="Dificultades" ToRole="Palabras" />
+        </EntityType>
+        <EntityContainer Name="JuegoAhorcadoEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Categorias" EntityType="Self.Categorias" />
+          <EntitySet Name="Dificultades" EntityType="Self.Dificultades" />
+          <EntitySet Name="Jugadores" EntityType="JuegoAhorcadoModel.Jugadores" />
+          <EntitySet Name="Palabras" EntityType="JuegoAhorcadoModel.Palabras" />
+          <AssociationSet Name="FK_Palabras_Categorias" Association="JuegoAhorcadoModel.FK_Palabras_Categorias">
+            <End Role="Categorias" EntitySet="Categorias" />
+            <End Role="Palabras" EntitySet="Palabras" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Palabras_Dificultades" Association="JuegoAhorcadoModel.FK_Palabras_Dificultades">
+            <End Role="Dificultades" EntitySet="Dificultades" />
+            <End Role="Palabras" EntitySet="Palabras" />
+          </AssociationSet>
+          <EntitySet Name="JugadoresPartidas" EntityType="JuegoAhorcadoModel.JugadoresPartidas" />
+          <EntitySet Name="Partidas" EntityType="JuegoAhorcadoModel.Partidas" />
+          <AssociationSet Name="FK__Jugadores__IdJug__6FE99F9F" Association="JuegoAhorcadoModel.FK__Jugadores__IdJug__6FE99F9F">
+            <End Role="Jugadores" EntitySet="Jugadores" />
+            <End Role="JugadoresPartidas" EntitySet="JugadoresPartidas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Jugadores__IdPar__70DDC3D8" Association="JuegoAhorcadoModel.FK__Jugadores__IdPar__70DDC3D8">
+            <End Role="Partidas" EntitySet="Partidas" />
+            <End Role="JugadoresPartidas" EntitySet="JugadoresPartidas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Partidas_Palabras" Association="JuegoAhorcadoModel.FK_Partidas_Palabras">
+            <End Role="Palabras" EntitySet="Palabras" />
+            <End Role="Partidas" EntitySet="Partidas" />
+          </AssociationSet>
+          <EntitySet Name="EstadosPartida" EntityType="JuegoAhorcadoModel.EstadosPartida" />
+          <AssociationSet Name="FK_Partidas_EstadosPartida" Association="JuegoAhorcadoModel.FK_Partidas_EstadosPartida">
+            <End Role="EstadosPartida" EntitySet="EstadosPartida" />
+            <End Role="Partidas" EntitySet="Partidas" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Jugadores">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Correo" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="Contrasena" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Telefono" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Puntaje" Type="Int32" Nullable="false" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FechaDeNacimiento" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ApellidoMaterno" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ApellidoPaterno" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="JugadoresPartidas" Relationship="JuegoAhorcadoModel.FK__Jugadores__IdJug__6FE99F9F" FromRole="Jugadores" ToRole="JugadoresPartidas" />
+          </EntityType>
+        <EntityType Name="Palabras">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IdDificultad" Type="Int32" Nullable="false" />
+          <Property Name="Descripcion" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DescripcionIngles" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IdCategoria" Type="Int32" Nullable="false" />
+          <Property Name="NombreIngles" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Categorias" Relationship="JuegoAhorcadoModel.FK_Palabras_Categorias" FromRole="Palabras" ToRole="Categorias" />
+          <NavigationProperty Name="Dificultades" Relationship="JuegoAhorcadoModel.FK_Palabras_Dificultades" FromRole="Palabras" ToRole="Dificultades" />
+          <NavigationProperty Name="Partidas" Relationship="JuegoAhorcadoModel.FK_Partidas_Palabras" FromRole="Palabras" ToRole="Partidas" />
+        </EntityType>
+        <Association Name="FK_Palabras_Categorias">
+          <End Type="JuegoAhorcadoModel.Categorias" Role="Categorias" Multiplicity="1" />
+          <End Type="JuegoAhorcadoModel.Palabras" Role="Palabras" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categorias">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Palabras">
+              <PropertyRef Name="IdCategoria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Palabras_Dificultades">
+          <End Type="JuegoAhorcadoModel.Dificultades" Role="Dificultades" Multiplicity="1" />
+          <End Type="JuegoAhorcadoModel.Palabras" Role="Palabras" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dificultades">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Palabras">
+              <PropertyRef Name="IdDificultad" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="JugadoresPartidas">
+          <Key>
+            <PropertyRef Name="IdJugador" />
+            <PropertyRef Name="IdPartida" />
+          </Key>
+          <Property Name="IdJugador" Type="Int32" Nullable="false" />
+          <Property Name="IdPartida" Type="Int32" Nullable="false" />
+          <Property Name="Rol" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Ganador" Type="Boolean" />
+          <NavigationProperty Name="Jugadores" Relationship="JuegoAhorcadoModel.FK__Jugadores__IdJug__6FE99F9F" FromRole="JugadoresPartidas" ToRole="Jugadores" />
+          <NavigationProperty Name="Partidas" Relationship="JuegoAhorcadoModel.FK__Jugadores__IdPar__70DDC3D8" FromRole="JugadoresPartidas" ToRole="Partidas" />
+        </EntityType>
+        <EntityType Name="Partidas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdPalabraSelecionada" Type="Int32" Nullable="false" />
+          <Property Name="IdEstadoPartida" Type="Int32" Nullable="false" />
+          <Property Name="FechaCreacionPartida" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="IdiomaPartida" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="JugadoresPartidas" Relationship="JuegoAhorcadoModel.FK__Jugadores__IdPar__70DDC3D8" FromRole="Partidas" ToRole="JugadoresPartidas" />
+          <NavigationProperty Name="Palabras" Relationship="JuegoAhorcadoModel.FK_Partidas_Palabras" FromRole="Partidas" ToRole="Palabras" />
+          <NavigationProperty Name="EstadosPartida" Relationship="JuegoAhorcadoModel.FK_Partidas_EstadosPartida" FromRole="Partidas" ToRole="EstadosPartida" />
+        </EntityType>
+        <Association Name="FK__Jugadores__IdJug__6FE99F9F">
+          <End Type="JuegoAhorcadoModel.Jugadores" Role="Jugadores" Multiplicity="1" />
+          <End Type="JuegoAhorcadoModel.JugadoresPartidas" Role="JugadoresPartidas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jugadores">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JugadoresPartidas">
+              <PropertyRef Name="IdJugador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Jugadores__IdPar__70DDC3D8">
+          <End Type="JuegoAhorcadoModel.Partidas" Role="Partidas" Multiplicity="1" />
+          <End Type="JuegoAhorcadoModel.JugadoresPartidas" Role="JugadoresPartidas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Partidas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JugadoresPartidas">
+              <PropertyRef Name="IdPartida" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Partidas_Palabras">
+          <End Type="JuegoAhorcadoModel.Palabras" Role="Palabras" Multiplicity="1" />
+          <End Type="JuegoAhorcadoModel.Partidas" Role="Partidas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Palabras">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Partidas">
+              <PropertyRef Name="IdPalabraSelecionada" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="EstadosPartida">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NombreIngles" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Partidas" Relationship="JuegoAhorcadoModel.FK_Partidas_EstadosPartida" FromRole="EstadosPartida" ToRole="Partidas" />
+        </EntityType>
+        <Association Name="FK_Partidas_EstadosPartida">
+          <End Type="JuegoAhorcadoModel.EstadosPartida" Role="EstadosPartida" Multiplicity="1" />
+          <End Type="JuegoAhorcadoModel.Partidas" Role="Partidas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EstadosPartida">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Partidas">
+              <PropertyRef Name="IdEstadoPartida" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="JuegoAhorcadoModelStoreContainer" CdmEntityContainer="JuegoAhorcadoEntities">
+          <EntitySetMapping Name="Categorias">
+            <EntityTypeMapping TypeName="JuegoAhorcadoModel.Categorias">
+              <MappingFragment StoreEntitySet="Categorias">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="NombreIngles" ColumnName="NombreIngles" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Dificultades">
+            <EntityTypeMapping TypeName="JuegoAhorcadoModel.Dificultades">
+              <MappingFragment StoreEntitySet="Dificultades">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="NombreIngles" ColumnName="NombreIngles" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Jugadores">
+            <EntityTypeMapping TypeName="JuegoAhorcadoModel.Jugadores">
+              <MappingFragment StoreEntitySet="Jugadores">
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="FechaDeNacimiento" ColumnName="FechaDeNacimiento" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Puntaje" ColumnName="Puntaje" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Contrasena" ColumnName="Contrasena" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Palabras">
+            <EntityTypeMapping TypeName="JuegoAhorcadoModel.Palabras">
+              <MappingFragment StoreEntitySet="Palabras">
+                <ScalarProperty Name="NombreIngles" ColumnName="NombreIngles" />
+                <ScalarProperty Name="IdCategoria" ColumnName="IdCategoria" />
+                <ScalarProperty Name="DescripcionIngles" ColumnName="DescripcionIngles" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="IdDificultad" ColumnName="IdDificultad" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="JugadoresPartidas">
+            <EntityTypeMapping TypeName="JuegoAhorcadoModel.JugadoresPartidas">
+              <MappingFragment StoreEntitySet="JugadoresPartidas">
+                <ScalarProperty Name="Ganador" ColumnName="Ganador" />
+                <ScalarProperty Name="Rol" ColumnName="Rol" />
+                <ScalarProperty Name="IdPartida" ColumnName="IdPartida" />
+                <ScalarProperty Name="IdJugador" ColumnName="IdJugador" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Partidas">
+            <EntityTypeMapping TypeName="JuegoAhorcadoModel.Partidas">
+              <MappingFragment StoreEntitySet="Partidas">
+                <ScalarProperty Name="IdiomaPartida" ColumnName="IdiomaPartida" />
+                <ScalarProperty Name="FechaCreacionPartida" ColumnName="FechaCreacionPartida" />
+                <ScalarProperty Name="IdEstadoPartida" ColumnName="IdEstadoPartida" />
+                <ScalarProperty Name="IdPalabraSelecionada" ColumnName="IdPalabraSelecionada" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EstadosPartida">
+            <EntityTypeMapping TypeName="JuegoAhorcadoModel.EstadosPartida">
+              <MappingFragment StoreEntitySet="EstadosPartida">
+                <ScalarProperty Name="NombreIngles" ColumnName="NombreIngles" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

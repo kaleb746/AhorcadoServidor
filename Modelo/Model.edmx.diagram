@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="cbd5b240ddfa4f7f9af9e92087bd64b4" Name="Diagram1" ZoomLevel="81">
+        <EntityTypeShape EntityType="JuegoAhorcadoModel.Categorias" Width="1.5" PointX="0.875" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="JuegoAhorcadoModel.Dificultades" Width="1.5" PointX="0.875" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="JuegoAhorcadoModel.Jugadores" Width="1.5" PointX="7.125" PointY="4.875" />
+        <EntityTypeShape EntityType="JuegoAhorcadoModel.Palabras" Width="1.5" PointX="3" PointY="1.5" />
+        <AssociationConnector Association="JuegoAhorcadoModel.FK_Palabras_Categorias" />
+        <AssociationConnector Association="JuegoAhorcadoModel.FK_Palabras_Dificultades" />
+        <EntityTypeShape EntityType="JuegoAhorcadoModel.JugadoresPartidas" Width="1.5" PointX="7.125" PointY="2.125" />
+        <EntityTypeShape EntityType="JuegoAhorcadoModel.Partidas" Width="1.5" PointX="5.125" PointY="1.75" />
+        <AssociationConnector Association="JuegoAhorcadoModel.FK__Jugadores__IdJug__6FE99F9F" />
+        <AssociationConnector Association="JuegoAhorcadoModel.FK__Jugadores__IdPar__70DDC3D8" />
+        <AssociationConnector Association="JuegoAhorcadoModel.FK_Partidas_Palabras" />
+        <EntityTypeShape EntityType="JuegoAhorcadoModel.EstadosPartida" Width="1.5" PointX="5.125" PointY="5" />
+        <AssociationConnector Association="JuegoAhorcadoModel.FK_Partidas_EstadosPartida" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
