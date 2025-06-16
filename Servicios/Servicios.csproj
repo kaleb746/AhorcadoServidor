@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="Dtos\CategoriaDTO.cs" />
     <Compile Include="Dtos\DificultadDTO.cs" />
+    <Compile Include="Dtos\HistorialPartidaDTO.cs" />
     <Compile Include="Dtos\JugadorDTO.cs" />
     <Compile Include="Dtos\PalabraDTO.cs" />
     <Compile Include="Dtos\PartidaDisponibleDTO.cs" />

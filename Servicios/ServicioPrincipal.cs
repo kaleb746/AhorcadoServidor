@@ -51,5 +51,7 @@ namespace Servicios
         public bool IntentarLetra(int idPartida, int idJugador, char letra) => _partidaManager.IntentarLetra(idPartida, idJugador, letra);
 
         public string ObtenerEstadoPalabra(int idPartida) => _partidaManager.ObtenerEstadoPalabra(idPartida);
+
+        public List<HistorialPartidaDTO> ObtenerHistorialDeJugador(int idJugador) => _partidaManager.ObtenerHistorialDeJugador(idJugador);
     }
 }

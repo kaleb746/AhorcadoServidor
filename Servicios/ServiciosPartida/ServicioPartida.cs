@@ -31,7 +31,11 @@ namespace Servicios.ServiciosPartida
             var dao = new PartidaDAO();
             return dao.ObtenerPartidasDisponibles(idJugadorActual);
         }
-
+        public List<HistorialPartidaDTO> ObtenerHistorialDeJugador(int idJugador)
+        {
+            var dao = new PartidaDAO();
+            return dao.ObtenerHistorialDeJugador(idJugador);
+        }
         public bool UnirseAPartida(int idPartida, int idJugador, string usernameInvitado)
         {
             var dao = new PartidaDAO();
