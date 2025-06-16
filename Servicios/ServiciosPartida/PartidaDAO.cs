@@ -29,7 +29,7 @@ namespace Servicios.ServiciosPartida
                     {
                         IdPalabraSelecionada = idPalabra,
                         IdEstadoPartida = ID_ESTADO_EN_ESPERA,
-                        FechaCreacionPartida = DateTime.Now,
+                        FechaCreacionPartida = DateTime.Now.AddTicks(-(DateTime.Now.Ticks % TimeSpan.TicksPerSecond)),
                         IdiomaPartida = "es"
                     };
 
@@ -126,7 +126,35 @@ namespace Servicios.ServiciosPartida
                 return false;
             }
         }
+        public List<HistorialPartidaDTO> ObtenerHistorialDeJugador(int idJugador)
+        {
+            using (var context = new JuegoAhorcadoEntities())
+            {
+                var historial = (from jp in context.JugadoresPartidas
+                                 join partida in context.Partidas on jp.IdPartida equals partida.Id
+                                 join palabra in context.Palabras on partida.IdPalabraSelecionada equals palabra.Id
+                                 join dificultad in context.Dificultades on palabra.IdDificultad equals dificultad.Id
+                                 where jp.IdJugador == idJugador && partida.IdEstadoPartida == 3
+                                 select new
+                                 {
+                                     partida.FechaCreacionPartida,
+                                     jp.Ganador,
+                                     Rival = context.JugadoresPartidas
+                                         .Where(r => r.IdPartida == partida.Id && r.IdJugador != idJugador)
+                                         .Select(r => r.Jugadores.Username)
+                                         .FirstOrDefault(),
+                                     Dificultad = dificultad.Nombre
+                                 }).ToList();
 
+                return historial.Select(h => new HistorialPartidaDTO
+                {
+                    Fecha = h.FechaCreacionPartida,
+                    Usuario = h.Rival ?? "Desconocido",
+                    Dificultad = h.Dificultad,
+                    Resultado = h.Ganador.GetValueOrDefault() ? "Ganó" : "Perdió"
+                }).ToList();
+            }
+        }
         public (bool acierto, string estadoActualPalabra, int erroresActuales) IntentarLetra(int idPartida, int idJugador, char letra)
         {
             using (var context = new JuegoAhorcadoEntities())

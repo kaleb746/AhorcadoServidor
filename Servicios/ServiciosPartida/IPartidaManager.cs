@@ -17,6 +17,8 @@ namespace Servicios.ServiciosPartida
         bool IntentarLetra(int idPartida, int idJugador, char letra);
         [OperationContract]
         string ObtenerEstadoPalabra(int idPartida);
+        [OperationContract]
+        List<HistorialPartidaDTO> ObtenerHistorialDeJugador(int idJugador);
     }
     public interface IPartidaCallback
     {
