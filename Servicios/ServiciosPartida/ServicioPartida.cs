@@ -13,10 +13,10 @@ namespace Servicios.ServiciosPartida
 {
     public class ServicioPartida : IPartidaManager
     {
-        public int CrearPartida(int idJugador, int idPalabra)
+        public int CrearPartida(int idJugador, int idPalabra, string idioma)
         {
             var dao = new PartidaDAO();
-            int idPartida = dao.CrearPartida(idJugador, idPalabra); 
+            int idPartida = dao.CrearPartida(idJugador, idPalabra, idioma);
 
             if (idPartida > 0)
             {
@@ -117,11 +117,14 @@ namespace Servicios.ServiciosPartida
                         foreach (var jugador in jugadores)
                         {
                             bool esGanador = jugador.IdJugador == idGanador;
+                            string idioma = partida.IdiomaPartida ?? "es";
+
                             string mensaje = esGanador
-                                ? "¡Felicidades! Has ganado la partida."
+                                ? (idioma.StartsWith("en") ? "Congratulations! You won the game." : "¡Felicidades! Has ganado la partida.")
                                 : erroresActuales >= MAX_ERRORES
-                                    ? "Te quedaste sin intentos. Has perdido."
-                                    : "Has perdido. El otro jugador adivinó la palabra.";
+                                    ? (idioma.StartsWith("en") ? "You ran out of attempts. You lost." : "Te quedaste sin intentos. Has perdido.")
+                                    : (idioma.StartsWith("en") ? "You lost. The other player guessed the word." : "Has perdido. El otro jugador adivinó la palabra.");
+
 
                             CallbackManager.IntentarNotificarFinPartida(jugador.IdJugador, esGanador, mensaje);
                         }

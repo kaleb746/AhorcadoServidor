@@ -42,7 +42,7 @@ namespace Servicios
 
         public List<PalabraDTO> ObtenerPalabrasPorCategoriaYDificultad(int idCategoria, int idDificultad) => _palabraManager.ObtenerPalabrasPorCategoriaYDificultad(idCategoria, idDificultad);
 
-        public int CrearPartida(int idJugador, int idPalabra) => _partidaManager.CrearPartida(idJugador, idPalabra);
+        public int CrearPartida(int idJugador, int idPalabra, string idioma) => _partidaManager.CrearPartida(idJugador, idPalabra, idioma);
 
         public List<PartidaDisponibleDTO> ObtenerPartidasDisponibles(int idJugadorActual) => _partidaManager.ObtenerPartidasDisponibles(idJugadorActual);
 
