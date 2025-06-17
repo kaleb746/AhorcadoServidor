@@ -10,7 +10,7 @@ namespace Servicios.ServiciosPartida
     {
         private static readonly Dictionary<int, HashSet<char>> LetrasAdivinadasPorPartida = new Dictionary<int, HashSet<char>>();
         private static readonly Dictionary<int, Dictionary<int, int>> ErroresPorJugadorPartida = new Dictionary<int, Dictionary<int, int>>();
-        public int CrearPartida(int idJugador, int idPalabra)
+        public int CrearPartida(int idJugador, int idPalabra, string idioma)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace Servicios.ServiciosPartida
                         IdPalabraSelecionada = idPalabra,
                         IdEstadoPartida = ID_ESTADO_EN_ESPERA,
                         FechaCreacionPartida = DateTime.Now.AddTicks(-(DateTime.Now.Ticks % TimeSpan.TicksPerSecond)),
-                        IdiomaPartida = "es"
+                        IdiomaPartida = idioma
                     };
 
                     context.Partidas.Add(partida);
@@ -169,7 +169,9 @@ namespace Servicios.ServiciosPartida
                     return (false, "", 0);
                 }
 
-                string palabra = partida.Palabras.Nombre.ToUpperInvariant();
+                string palabra = (partida.IdiomaPartida == "en" ? partida.Palabras.NombreIngles
+                    : partida.Palabras.Nombre).ToUpperInvariant();
+
                 letra = char.ToUpperInvariant(letra);
 
                 if (!LetrasAdivinadasPorPartida.ContainsKey(idPartida))
@@ -211,7 +213,9 @@ namespace Servicios.ServiciosPartida
 
                 var letrasAdivinadas = ObtenerLetrasAdivinadas(idPartida);
 
-                return new string(palabra.Nombre
+                string textoPalabra = partida.IdiomaPartida == "en" ? palabra.NombreIngles : palabra.Nombre;
+
+                return new string(textoPalabra
                     .Select(c => letrasAdivinadas.Contains(char.ToUpper(c)) ? c : '_')
                     .ToArray());
             }

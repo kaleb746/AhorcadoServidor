@@ -8,7 +8,7 @@ namespace Servicios.ServiciosPartida
     public interface IPartidaManager
     {
         [OperationContract]
-        int CrearPartida(int idJugador, int idPalabra);
+        int CrearPartida(int idJugador, int idPalabra, string idioma);
         [OperationContract]
         List<PartidaDisponibleDTO> ObtenerPartidasDisponibles(int idJugadorActual);
         [OperationContract]
