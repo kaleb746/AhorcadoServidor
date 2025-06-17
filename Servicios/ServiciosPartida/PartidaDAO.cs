@@ -62,23 +62,28 @@ namespace Servicios.ServiciosPartida
         {
             using (var context = new JuegoAhorcadoEntities())
             {
-                var partidas = (from partida in context.Partidas
-                                join jp in context.JugadoresPartidas on partida.Id equals jp.IdPartida
-                                join jugador in context.Jugadores on jp.IdJugador equals jugador.Id
-                                where partida.IdEstadoPartida == 1
-                                      && jp.Rol == "Anfitrion"
-                                      && jp.IdJugador != idJugadorActual
-                                select new PartidaDisponibleDTO
-                                {
-                                    IdPartida = partida.Id,
-                                    NombrePalabra = partida.Palabras.Nombre,
-                                    NombreCategoria = partida.Palabras.Categorias.Nombre,
-                                    NombreDificultad = partida.Palabras.Dificultades.Nombre,
-                                    FechaCreacion = partida.FechaCreacionPartida,
-                                    Idioma = partida.IdiomaPartida,
-                                    IdJugadorAnfitrion = jp.IdJugador,
-                                    UsuarioAnfitrion = jugador.Username
-                                }).ToList();
+                var partidas = context.Partidas
+                    .Include("Palabras")
+                    .Include("Palabras.Categorias")
+                    .Include("Palabras.Dificultades")
+                    .Join(context.JugadoresPartidas, partida => partida.Id, jp => jp.IdPartida, (partida, jp) => new { partida, jp })
+                    .Join(context.Jugadores, temp => temp.jp.IdJugador, jugador => jugador.Id, (temp, jugador) => new { temp.partida, temp.jp, jugador })
+                    .Where(x => x.partida.IdEstadoPartida == 1
+                             && x.jp.Rol == "Anfitrion"
+                             && x.jp.IdJugador != idJugadorActual)
+                    .ToList() // Cargar en memoria para permitir ?. y ??
+                    .Select(x => new PartidaDisponibleDTO
+                    {
+                        IdPartida = x.partida.Id,
+                        NombrePalabra = x.partida.Palabras?.Nombre ?? "[Sin palabra]",
+                        NombreCategoria = x.partida.Palabras?.Categorias?.Nombre ?? "[Sin categoría]",
+                        NombreDificultad = x.partida.Palabras?.Dificultades?.Nombre ?? "[Sin dificultad]",
+                        FechaCreacion = x.partida.FechaCreacionPartida,
+                        Idioma = x.partida.IdiomaPartida ?? "es",
+                        IdJugadorAnfitrion = x.jp.IdJugador,
+                        UsuarioAnfitrion = x.jugador.Username
+                    })
+                    .ToList();
 
                 return partidas;
             }
