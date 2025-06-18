@@ -53,5 +53,7 @@ namespace Servicios
         public string ObtenerEstadoPalabra(int idPartida) => _partidaManager.ObtenerEstadoPalabra(idPartida);
 
         public List<HistorialPartidaDTO> ObtenerHistorialDeJugador(int idJugador) => _partidaManager.ObtenerHistorialDeJugador(idJugador);
+
+        public string ObtenerDescripcionPalabra(int idPartida) => _partidaManager.ObtenerDescripcionPalabra(idPartida);
     }
 }

@@ -19,6 +19,8 @@ namespace Servicios.ServiciosPartida
         string ObtenerEstadoPalabra(int idPartida);
         [OperationContract]
         List<HistorialPartidaDTO> ObtenerHistorialDeJugador(int idJugador);
+        [OperationContract]
+        string ObtenerDescripcionPalabra(int idPartida);
     }
     public interface IPartidaCallback
     {
