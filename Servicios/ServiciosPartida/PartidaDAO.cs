@@ -88,6 +88,23 @@ namespace Servicios.ServiciosPartida
                 return partidas;
             }
         }
+        public string ObtenerDescripcionPalabra(int idPartida)
+        {
+            using (var context = new JuegoAhorcadoEntities())
+            {
+                var partida = context.Partidas
+                    .Include("Palabras")
+                    .FirstOrDefault(p => p.Id == idPartida);
+
+                if (partida == null || partida.Palabras == null)
+                    return "";
+
+                return partida.IdiomaPartida == "en"
+                    ? partida.Palabras.DescripcionIngles
+                    : partida.Palabras.Descripcion;
+            }
+        }
+
         public bool RegistrarInvitadoEnPartida(int idPartida, int idJugador)
         {
             try
