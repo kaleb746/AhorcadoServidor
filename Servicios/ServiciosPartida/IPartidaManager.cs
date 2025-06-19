@@ -21,6 +21,8 @@ namespace Servicios.ServiciosPartida
         List<HistorialPartidaDTO> ObtenerHistorialDeJugador(int idJugador);
         [OperationContract]
         string ObtenerDescripcionPalabra(int idPartida);
+        [OperationContract]
+        int AbandonarPartida(int idJugador, int idPartida);
     }
     public interface IPartidaCallback
     {
