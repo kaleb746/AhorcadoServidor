@@ -41,6 +41,42 @@ namespace Servicios.ServiciosPartida
             var dao = new PartidaDAO();
             return dao.ObtenerDescripcionPalabra(idPartida);
         }
+        public int AbandonarPartida(int idJugador, int idPartida)
+        {
+            var dao = new PartidaDAO();
+            int resultado = dao.AbandonarPartida(idJugador, idPartida);
+
+            if (resultado != 1)
+                return resultado;
+
+            Task.Run(() =>
+            {
+                using (var context = new JuegoAhorcadoEntities())
+                {
+                    var partida = context.Partidas.FirstOrDefault(p => p.Id == idPartida);
+                    if (partida == null) return;
+
+                    var jugadores = context.JugadoresPartidas
+                        .Where(jp => jp.IdPartida == idPartida)
+                        .ToList();
+
+                    foreach (var jugador in jugadores)
+                    {
+                        bool esGanador = jugador.IdJugador != idJugador;
+                        string idioma = partida.IdiomaPartida ?? "es";
+
+                        string mensaje = esGanador
+                            ? (idioma.StartsWith("en") ? "The other player abandoned. You won!" : "El otro jugador abandonó. ¡Has ganado!")
+                            : (idioma.StartsWith("en") ? "You abandoned the game." : "Has abandonado la partida.");
+
+                        CallbackManager.IntentarNotificarFinPartida(jugador.IdJugador, esGanador, mensaje);
+                    }
+                }
+            });
+
+            return 1;
+        }
+
         public bool UnirseAPartida(int idPartida, int idJugador, string usernameInvitado)
         {
             var dao = new PartidaDAO();

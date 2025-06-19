@@ -55,5 +55,7 @@ namespace Servicios
         public List<HistorialPartidaDTO> ObtenerHistorialDeJugador(int idJugador) => _partidaManager.ObtenerHistorialDeJugador(idJugador);
 
         public string ObtenerDescripcionPalabra(int idPartida) => _partidaManager.ObtenerDescripcionPalabra(idPartida);
+
+        public int AbandonarPartida(int idJugador, int idPartida) => _partidaManager.AbandonarPartida(idJugador, idPartida);
     }
 }

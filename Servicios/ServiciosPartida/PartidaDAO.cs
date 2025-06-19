@@ -104,7 +104,43 @@ namespace Servicios.ServiciosPartida
                     : partida.Palabras.Descripcion;
             }
         }
+        public int AbandonarPartida(int idJugador, int idPartida)
+        {
+            using (var context = new JuegoAhorcadoEntities())
+            {
+                var partida = context.Partidas.FirstOrDefault(p => p.Id == idPartida);
+                if (partida == null)
+                    return 3; // Partida no válida
 
+                if (partida.IdEstadoPartida == 3)
+                    return 2; // Ya estaba finalizada
+
+                var jugador = context.JugadoresPartidas
+                    .FirstOrDefault(jp => jp.IdJugador == idJugador && jp.IdPartida == idPartida);
+
+                if (jugador == null)
+                    return 3; // Jugador no válido
+
+                jugador.Ganador = false;
+
+                var rival = context.JugadoresPartidas
+                    .FirstOrDefault(jp => jp.IdPartida == idPartida && jp.IdJugador != idJugador);
+
+                if (rival != null)
+                {
+                    rival.Ganador = true;
+
+                    var rivalInfo = context.Jugadores.FirstOrDefault(j => j.Id == rival.IdJugador);
+                    if (rivalInfo != null)
+                        rivalInfo.Puntaje += 10;
+                }
+
+                partida.IdEstadoPartida = 3;
+                context.SaveChanges();
+
+                return 1; // OK
+            }
+        }
         public bool RegistrarInvitadoEnPartida(int idPartida, int idJugador)
         {
             try
