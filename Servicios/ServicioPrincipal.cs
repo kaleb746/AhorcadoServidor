@@ -57,5 +57,7 @@ namespace Servicios
         public string ObtenerDescripcionPalabra(int idPartida) => _partidaManager.ObtenerDescripcionPalabra(idPartida);
 
         public int AbandonarPartida(int idJugador, int idPartida) => _partidaManager.AbandonarPartida(idJugador, idPartida);
+
+        public int ObtenerPartidaActivaDeJugador(int idJugador) => _partidaManager.ObtenerPartidaActivaDeJugador(idJugador);
     }
 }

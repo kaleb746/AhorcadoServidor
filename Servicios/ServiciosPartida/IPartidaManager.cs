@@ -23,6 +23,8 @@ namespace Servicios.ServiciosPartida
         string ObtenerDescripcionPalabra(int idPartida);
         [OperationContract]
         int AbandonarPartida(int idJugador, int idPartida);
+        [OperationContract]
+        int ObtenerPartidaActivaDeJugador(int idJugador);
     }
     public interface IPartidaCallback
     {
