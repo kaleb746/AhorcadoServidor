@@ -138,9 +138,22 @@ namespace Servicios.ServiciosPartida
                 partida.IdEstadoPartida = 3;
                 context.SaveChanges();
 
-                return 1; // OK
+                return 1; 
             }
         }
+        public int ObtenerIdPartidaActivaDeJugador(int idJugador)
+        {
+            using (var context = new JuegoAhorcadoEntities())
+            {
+                var partida = (from jp in context.JugadoresPartidas
+                               join p in context.Partidas on jp.IdPartida equals p.Id
+                               where jp.IdJugador == idJugador && p.IdEstadoPartida == 2
+                               select p.Id).FirstOrDefault();
+
+                return partida;
+            }
+        }
+
         public bool RegistrarInvitadoEnPartida(int idPartida, int idJugador)
         {
             try

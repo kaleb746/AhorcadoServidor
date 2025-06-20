@@ -76,7 +76,11 @@ namespace Servicios.ServiciosPartida
 
             return 1;
         }
-
+        public int ObtenerPartidaActivaDeJugador(int idJugador)
+        {
+            var dao = new PartidaDAO();
+            return dao.ObtenerIdPartidaActivaDeJugador(idJugador);
+        }
         public bool UnirseAPartida(int idPartida, int idJugador, string usernameInvitado)
         {
             var dao = new PartidaDAO();
