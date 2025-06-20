@@ -119,7 +119,7 @@ namespace Servicios.ServiciosPartida
             var (acierto, estadoActualPalabra, erroresActuales) = dao.IntentarLetra(idPartida, idJugador, letra);
 
             bool palabraCompletada = !estadoActualPalabra.Contains('_');
-            const int MAX_ERRORES = 5;
+            const int MAX_ERRORES = 6;
 
             Task.Run(() =>
             {
