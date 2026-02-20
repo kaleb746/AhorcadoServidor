@@ -54,24 +54,23 @@ El sistema implementa la lógica completa del juego, administración de jugadore
 - Arquitectura Cliente-Servidor
 
 ---
+## 📁 Estructura del Proyecto
 
-## 📂 Estructura del Proyecto
-AhorcadoServidor
-│
-├── Host
-│ └── Program.cs
-│
-├── Servicios
-│ ├── ServicioPrincipal
-│ ├── ServiciosJugador
-│ ├── ServiciosPalabra
-│ ├── ServiciosPartida
-│ └── ServiciosSesion
-│
-└── Modelo
-├── DTOs
-├── Entidades
-└── AccesoDatos
+AhorcadoServidor  
+├── Host  
+│   └── Program.cs  
+│  
+├── Servicios  
+│   ├── ServicioPrincipal  
+│   ├── ServiciosJugador  
+│   ├── ServiciosPalabra  
+│   ├── ServiciosPartida  
+│   └── ServiciosSesion  
+│  
+└── Modelo  
+    ├── DTOs  
+    ├── Entidades  
+    └── AccesoDatos  
 
 ---
 
